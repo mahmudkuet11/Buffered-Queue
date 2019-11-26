@@ -20,28 +20,28 @@ class BufferedQueue {
      */
     protected $max_items_in_queue;
     /**
-     * @var \Closure
+     * @var \Closure|HandlerContract
      */
-    protected $callback;
+    protected $handler;
     
     /**
      * BufferedQueue constructor.
      *
-     * @param $callback
+     * @param $handler \Closure|HandlerContract
      * @param $max_items_in_queue
      */
-    public function __construct($callback, $max_items_in_queue) {
+    public function __construct($handler, $max_items_in_queue) {
         $this->all_data = [];
         $this->max_items_in_queue = $max_items_in_queue;
-        $this->callback = $callback;
+        $this->handler = $handler;
     }
     
-    public static function make($key, $callback, $max_items_in_queue) {
+    public static function make($key, $handler, $max_items_in_queue) {
         if (array_key_exists($key, self::$instances)) {
             return self::$instances[$key];
         }
         
-        $instance = new self($callback, $max_items_in_queue);
+        $instance = new self($handler, $max_items_in_queue);
         self::$instances[$key] = $instance;
         
         return $instance;
@@ -70,7 +70,7 @@ class BufferedQueue {
     public function run() {
         if (count($this->all_data) > 0) {
             try {
-                call_user_func($this->callback, $this->all_data);
+                $this->callHandler();
             } catch (\Exception $e) {
                 throw $e;
             } finally {
@@ -79,6 +79,22 @@ class BufferedQueue {
         }
         
         return $this;
+    }
+    
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function callHandler() {
+        if ($this->handler instanceof \Closure) {
+            return call_user_func($this->handler, $this->all_data);
+        }
+        
+        if ($this->handler instanceof HandlerContract) {
+            return $this->handler->handle($this->all_data);
+        }
+        
+        throw new \Exception("Handler is not supported. Must be a valid closure or instance of " . HandlerContract::class);
     }
     
     public function getItems() {
