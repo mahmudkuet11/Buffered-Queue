@@ -49,6 +49,21 @@ $queue->finish();
 ]
 ```
 
+Also instance of Mahmud\BufferedQueue\HandlerContract can be passed.
+
+```php
+use Mahmud\BufferedQueue\HandlerContract;
+
+class QueueHandler implements HandlerContract {
+
+    public function handle($items) {
+        // Do something
+    }
+}
+
+$queue = BufferedQueue::make('key', new QueueHandler, 3);
+```
+
 ## API
 
 ### make($key, $callback, $max_size)
