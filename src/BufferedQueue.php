@@ -7,16 +7,26 @@ namespace Mahmud\BufferedQueue;
 
 class BufferedQueue {
     
-    private $all_data;
-    
-    private $max_items_in_queue;
-    
-    private $callback;
-    
-    private static $instances = [];
+    /**
+     * @var array BufferedQueue[]
+     */
+    protected static $instances = [];
+    /**
+     * @var array
+     */
+    protected $all_data;
+    /**
+     * @var integer
+     */
+    protected $max_items_in_queue;
+    /**
+     * @var \Closure
+     */
+    protected $callback;
     
     /**
      * BufferedQueue constructor.
+     *
      * @param $callback
      * @param $max_items_in_queue
      */
@@ -38,24 +48,6 @@ class BufferedQueue {
     }
     
     /**
-     * @return $this
-     * @throws \Exception
-     */
-    public function run() {
-        if (count($this->all_data) > 0) {
-            try{
-                call_user_func($this->callback, $this->all_data);
-            }catch (\Exception $e){
-                throw $e;
-            }finally{
-                $this->all_data = [];
-            }
-        }
-        
-        return $this;
-    }
-    
-    /**
      * @param $data
      *
      * @return $this
@@ -66,6 +58,24 @@ class BufferedQueue {
         
         if (count($this->all_data) >= $this->max_items_in_queue) {
             $this->run();
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @return $this
+     * @throws \Exception
+     */
+    public function run() {
+        if (count($this->all_data) > 0) {
+            try {
+                call_user_func($this->callback, $this->all_data);
+            } catch (\Exception $e) {
+                throw $e;
+            } finally {
+                $this->all_data = [];
+            }
         }
         
         return $this;
