@@ -53,7 +53,9 @@ $queue->finish();
 
 ### make($key, $callback, $max_size)
 
+```php
 BufferedQueue::make($key, $callback, $max_size);
+```
 
 - `$key` is a unique string. For duplicated key this will return same instance.
 
