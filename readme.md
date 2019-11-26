@@ -4,6 +4,8 @@
 [![Build Status](https://travis-ci.org/mahmudkuet11/Buffered-Queue.svg?branch=master)](https://travis-ci.org/mahmudkuet11/Buffered-Queue)
 [![License](https://poser.pugx.org/mahmud/buffered-queue/license)](https://packagist.org/packages/mahmud/buffered-queue)
 
+A simple to use buffering queue as PHP package  (no dependencies), which flexibly buffers objects, strings, integers etc. until a maximum size is reached
+
 # Installation
 Via Composer
 
