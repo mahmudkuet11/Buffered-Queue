@@ -51,7 +51,7 @@ $queue->finish();
 ]
 ```
 
-Also instance of Mahmud\BufferedQueue\HandlerContract can be passed.
+Also instance of `Mahmud\BufferedQueue\HandlerContract` can be passed.
 
 ```php
 use Mahmud\BufferedQueue\HandlerContract;
